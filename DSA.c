@@ -8,19 +8,13 @@ void select_q(mpz_t q){
     
     gmp_randstate_t state;
     gmp_randinit_default(state);
+    gmp_randseed_ui(state, time(NULL));
 
     printf("q 고르는중\n");
-    /*while (1)
-    {
-        gmp_randseed_ui(state, time(NULL));
-        mpz_urandomb(q, state, 160);
-        mpz_nextprime(q, q);
 
-        if(mpz_sizeinbase(q,2) == 160)
-            break;
-    }*/
+    mpz_urandomb(q, state, 160);
+    mpz_setbit(q, 159);
 
-    mpz_set_str(q, "4347836694147894392462172921685474701492978466", 10);
     printf("q 고르기 완료\n");
 }
 
@@ -33,21 +27,17 @@ void select_p(mpz_t p, mpz_t q){
     printf("p 고르는중\n");\
     mpz_t rem;
     mpz_init(rem);
-    /*while (1)
+    while (1)
     {  
         gmp_randseed_ui(state, time(NULL));
         mpz_urandomb(rem, state, 512);
         mpz_mul(p_1, q, rem);
         mpz_add_ui(p, p_1, 1);
-        if(mpz_sizeinbase(p,2) == 512){
-            printf("p가 512비트이다\n");
-            int result = mpz_probab_prime_p(p, 25);
+        int result = mpz_probab_prime_p(p, 25);
             if (result != 0) 
-            break;
-        }
-    }*/
-    mpz_set_str(p, "148767109207041467567700722646889064703732894000430513648167912710559320824208937726229029174074535435847965347888840433664034224218639322758458496855474174768535017126220825852955645324716307271046181284900681084438631077032823087304370996454596667109825315691196899417757128087469673272450214338079148012305", 10);
-    
+                break;
+    }
+   
     printf("p 고르기 완료\n");
 }
 void select_g(mpz_t p, mpz_t q, mpz_t g){
@@ -147,8 +137,9 @@ void Signature(char M[], mpz_t S, mpz_t p, mpz_t q, mpz_t g, mpz_t x, mpz_t r){
         mpz_mul(S, S, k_inv);
         mpz_mod(S, S, q);
 
-        if(mpz_invert(S_inv, S, p) == 1 ){
-            mpz_invert(S_inv, S, p);
+        if(mpz_invert(S_inv, S, q) == 1 ){
+            gmp_printf("S_inv: %Zd\n", S_inv);
+            mpz_invert(S_inv, S, q);
             break;
         }
     }
@@ -162,7 +153,7 @@ void Verification(char M[], mpz_t S, mpz_t p, mpz_t q, mpz_t g, mpz_t y, mpz_t r
     mpz_t S_inv, H, a, b, V;
     mpz_inits(S_inv, H, a, b, V, NULL);
     //S의 역원
-    mpz_invert(S_inv, S, p);
+    mpz_invert(S_inv, S, q);
     gmp_printf("s_inv: %Zd\n", S_inv);
 
     //평문 해시
