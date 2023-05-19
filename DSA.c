@@ -192,6 +192,9 @@ void DSA(char M[], mpz_t S){
     printf("\nSignature\n");
     Signature(M, S, p, q, g, x, r);
 
+
+    //공격자의 공격 - 메세지 바꿔치기
+    M = "10000원";
     printf("\n\nVerification\n");
     Verification(M, S, p, q, g, y, r);
 }
