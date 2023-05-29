@@ -18,7 +18,7 @@ void print_symetric_key(unsigned char *key, size_t len)
 EC_KEY *create_key(void)
 {
 	EC_KEY *key;
-    //EC_KEY 객체 생성
+    //EC_KEY 구조체 생성
 	if (NULL == (key = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1))) {
 		printf("Failed to create key curve\n");
 		return NULL;
