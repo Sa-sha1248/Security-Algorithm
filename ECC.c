@@ -38,8 +38,8 @@ unsigned char *get_symetric(EC_KEY *key, const EC_POINT *peer_pub_key,
 	int field_size;
 	unsigned char *symetric;
 
-	field_size = EC_GROUP_get_degree(EC_KEY_get0_group(key));
-	*symetric_len = (field_size + 7) / 8;
+	field_size = EC_GROUP_get_degree(EC_KEY_get0_group(key)); //타원 곡선 그룹 비트
+	*symetric_len = (field_size + 7) / 8; //공유 키 길이
 
 	if (NULL == (symetric = OPENSSL_malloc(*symetric_len))) {
 		printf("Failed to allocate memory for symetric");
